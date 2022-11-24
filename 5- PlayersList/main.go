@@ -24,7 +24,7 @@ func main() {
 
 func startGame() {
 	players := savePlayer()
-	nbRounds := 2
+	nbRounds := 5
 	for i := 0; i < nbRounds; i++ {
 		if i == 0 {
 			clearConsole()
@@ -71,7 +71,7 @@ func savePlayer() []Player {
 func playGame(players []Player) {
 	if len(players) >= 1 {
 		rand.Seed(time.Now().UnixNano())
-		rnumber := rand.Intn(2) + 1
+		rnumber := rand.Intn(100) + 1
 		tempnumber := -1
 
 		for tempnumber != rnumber {
