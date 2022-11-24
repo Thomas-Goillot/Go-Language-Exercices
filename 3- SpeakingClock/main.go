@@ -8,7 +8,7 @@ import (
 func main() {
 	day := time.Now()
 	fmt.Println("Nous sommes le", day.Day(), getMonthName(int(day.Month())), "il est", day.Hour(), "h", addZeroIfNecessary(day.Minute()))
-	fmt.Printf("Nous sommes le %d %s, il est %dh%s", day.Day(), getMonthName(int(day.Month())), day.Hour(), addZeroIfNecessary(day.Minute()))
+	fmt.Printf("Nous sommes le %d %s, il est %sh%s", day.Day(), getMonthName(int(day.Month())), addZeroIfNecessary(day.Hour()), addZeroIfNecessary(day.Minute()))
 }
 
 func getMonthName(month int) string {
