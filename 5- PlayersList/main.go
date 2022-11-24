@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
+	"os"
 	"time"
 )
 
@@ -14,12 +16,15 @@ type Player struct {
 }
 
 func main() {
+	if _, err := os.Stat("score.txt"); err == nil {
+		showOldScore()
+	}
 	startGame()
 }
 
 func startGame() {
 	players := savePlayer()
-	nbRounds := 5
+	nbRounds := 2
 	for i := 0; i < nbRounds; i++ {
 		if i == 0 {
 			clearConsole()
@@ -27,6 +32,7 @@ func startGame() {
 		fmt.Printf("\n-------ROUND %d -------\n", i+1)
 		playGame(players)
 	}
+	saveScore(players)
 }
 
 func savePlayer() []Player {
@@ -100,4 +106,39 @@ func showScore(players []Player) {
 
 func clearConsole() {
 	fmt.Print("\033[H\033[2J")
+}
+
+func saveScore(Players []Player) {
+	file, err := os.Create("score.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	for i := 0; i < len(Players); i++ {
+		fmt.Fprintf(file, "%s : %d\n", Players[i].Pseudo, Players[i].Score)
+	}
+}
+
+func showOldScore() {
+
+	fmt.Printf("\n------- HIGHT SCORES -------\n\n")
+
+	file, err := os.Open("score.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer file.Close()
+
+	buf := make([]byte, 1024)
+	for {
+		n, err := file.Read(buf)
+		if err != nil {
+			break
+		}
+		fmt.Print(string(buf[:n]))
+	}
+
+	fmt.Printf("\n----------------------------\n\n")
 }
