@@ -68,7 +68,33 @@ func saveFile(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(file, "%s\n", stringreturn)
 }
 
+func deleteLine(w http.ResponseWriter, req *http.Request) {
+	switch req.Method {
+	case http.MethodPost:
+		if err := req.ParseForm(); err != nil {
+			fmt.Println("Something went bad")
+			fmt.Fprintln(w, "Something went bad")
+			return
+		}
+		for key, value := range req.PostForm {
+			fmt.Println(key, "=>", value)
+		}
+
+		if _, ok := req.PostForm["name"]; !ok {
+			fmt.Println("Name field is missing")
+			fmt.Fprintln(w, "Name field is missing")
+			return
+		}
+
+	default:
+		fmt.Println("Method not allowed")
+		fmt.Fprintln(w, "Method not allowed")
+	}
+
+}
+
 func main() {
+	http.HandleFunc("/hello/delete", deleteLine)
 	http.HandleFunc("/hello/save", helloHandler)
 	http.HandleFunc("/hello", helloHandler)
 	http.ListenAndServe(":9000", nil)
