@@ -19,7 +19,6 @@ func helloHandler(w http.ResponseWriter, req *http.Request) {
 			fmt.Println(key, "=>", value)
 		}
 
-		//check if there is a name surname and adrr field
 		if _, ok := req.PostForm["name"]; !ok {
 			fmt.Println("Name field is missing")
 			fmt.Fprintln(w, "Name field is missing")
@@ -51,5 +50,3 @@ func main() {
 	http.HandleFunc("/hello", helloHandler)
 	http.ListenAndServe(":9000", nil)
 }
-
-//nom prenom addresse utilisateur
