@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 )
 
 func helloHandler(w http.ResponseWriter, req *http.Request) {
@@ -25,6 +27,12 @@ func helloHandler(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
+		if _, ok := req.PostForm["passion"]; !ok {
+			fmt.Println("Passion field is missing")
+			fmt.Fprintln(w, "Passion field is missing")
+			return
+		}
+
 		if _, ok := req.PostForm["surname"]; !ok {
 			fmt.Println("Surname field is missing")
 			fmt.Fprintln(w, "Surname field is missing")
@@ -43,10 +51,25 @@ func helloHandler(w http.ResponseWriter, req *http.Request) {
 
 		fmt.Fprintf(w, "<h1>%s</h1>", req.PostForm["name"][0])
 		fmt.Fprintf(w, "<h2>%s</h2>", req.PostForm["surname"][0])
+		fmt.Fprintf(w, "<h2>%s</h2>", req.PostForm["passion"][0])
 		fmt.Fprintf(w, "<p>%s</p>", req.PostForm["adrr"][0])
 	}
+	saveFile(w, req)
 }
+
+func saveFile(w http.ResponseWriter, req *http.Request) {
+	file, err := os.OpenFile("data.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	stringreturn := "Name: " + req.PostForm["name"][0] + " Surname: " + req.PostForm["surname"][0] + " Passion: " + req.PostForm["passion"][0] + " Address: " + req.PostForm["adrr"][0]
+	fmt.Fprintf(file, "%s\n", stringreturn)
+}
+
 func main() {
+	http.HandleFunc("/hello/save", helloHandler)
 	http.HandleFunc("/hello", helloHandler)
 	http.ListenAndServe(":9000", nil)
 }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="">
+        <input type="text" name="" id="name">
+        <input type="text" name="" id="surname">
+        <input type="text" name="" id="adrr">
+        <button type="submit">ibragay</button>
+    </form>
+    <script>
+        //on submit 
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            //get data
+            const name = document.querySelector('#name').value;
+            const surname = document.querySelector('#surname').value;
+            const adrr = document.querySelector('#adrr').value;
+            //send data
+            fetch('http://localhost:9000/hello', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name,
+                    surname,
+                    adrr
+                })
+            })
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(err => console.log(err))
+        })
+
+
+    </script>
+</body>
+</html>
